@@ -1,0 +1,10 @@
+# Exercise 2.4 — largest value in a list.
+def maximum(xs: list[int]) -> int {
+    best: int = xs[0]
+    for x in xs {
+        if x > best { best = x }
+    }
+    return best
+}
+
+print(maximum([3, 1, 4, 1, 5, 9, 2]))

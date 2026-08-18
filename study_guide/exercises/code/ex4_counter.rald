@@ -1,0 +1,14 @@
+# Exercise 4.2 — a counter that advances by a given step.
+def make_counter(step: int) -> () -> int {
+    n: int = 0
+    def next() -> int {
+        n = n + step
+        return n
+    }
+    return next
+}
+
+const by_two = make_counter(2)
+const by_ten = make_counter(10)
+print(by_two(), by_two(), by_two())
+print(by_ten(), by_ten())

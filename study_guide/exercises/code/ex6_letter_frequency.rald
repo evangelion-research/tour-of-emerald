@@ -1,0 +1,24 @@
+# Exercise 6.1 — letter frequency.
+import strings
+import chars
+import dict
+from dict import Map
+import sort
+
+def letters_of(text: str) -> list[str] {
+    out: list[str] = []
+    for c in text {
+        if chars.is_alpha(c) { append(out, chars.to_lower(c)) }
+    }
+    return out
+}
+
+def report(text: str) -> None {
+    counts: Map[int] = dict.new_map()
+    for c in letters_of(text) { dict.bump(counts, c, 1) }
+    for k in sort.sorted_strs(dict.keys(counts)) {
+        print(k, dict.get_or(counts, k, 0))
+    }
+}
+
+report("banana")

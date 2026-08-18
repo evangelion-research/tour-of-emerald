@@ -1,0 +1,11 @@
+# Exercise 3.2 — first item of a list, or a default.
+import lists
+
+def first_or(xs: list[int], default: int) -> int {
+    const o = lists.first(xs)
+    if o.some == True { return o.val }
+    return default
+}
+
+print(first_or([10, 20], 0))
+print(first_or([], 0))

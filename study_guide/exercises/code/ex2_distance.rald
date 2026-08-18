@@ -1,0 +1,13 @@
+# Exercise 2.3 — squared Euclidean distance between two points.
+type Point = { x: int, y: int }
+
+def distance_squared(p: Point, q: Point) -> int {
+    const dx = p.x - q.x
+    const dy = p.y - q.y
+    return dx * dx + dy * dy
+}
+
+const origin = { x: 0, y: 0 }
+const target = { x: 3, y: 4 }
+print(distance_squared(origin, target))
+print(distance_squared({ x: 1, y: 1 }, { x: 2, y: 2 }))

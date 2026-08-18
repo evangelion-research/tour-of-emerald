@@ -1,0 +1,47 @@
+# Exercise 6.2 — a tiny expression evaluator with safe division.
+from result import Result, ok, err, unwrap_or, why
+
+type Expr = { tag: "num", val: int }
+          | { tag: "add", left: Expr, right: Expr }
+          | { tag: "mul", left: Expr, right: Expr }
+          | { tag: "div", left: Expr, right: Expr }
+
+def eval(e: Expr) -> Result[int] {
+    match e {
+        { tag: "num", val: val } -> { return ok(val) }
+        { tag: "add", left: left, right: right } -> {
+            const a = eval(left)
+            if a.ok == False { return a }
+            const b = eval(right)
+            if b.ok == False { return b }
+            return ok(a.val + b.val)
+        }
+        { tag: "mul", left: left, right: right } -> {
+            const a = eval(left)
+            if a.ok == False { return a }
+            const b = eval(right)
+            if b.ok == False { return b }
+            return ok(a.val * b.val)
+        }
+        { tag: "div", left: left, right: right } -> {
+            const a = eval(left)
+            if a.ok == False { return a }
+            const b = eval(right)
+            if b.ok == False { return b }
+            if b.val == 0 { return err("division by zero") }
+            return ok(int(a.val / b.val))
+        }
+    }
+}
+
+const expr = {
+    tag: "add",
+    left: { tag: "num", val: 5 },
+    right: { tag: "mul", left: { tag: "num", val: 2 }, right: { tag: "num", val: 3 } },
+}
+const okdiv = { tag: "div", left: { tag: "num", val: 10 }, right: { tag: "num", val: 2 } }
+const baddiv = { tag: "div", left: { tag: "num", val: 10 }, right: { tag: "num", val: 0 } }
+
+print(unwrap_or(eval(expr), 0))
+print(unwrap_or(eval(okdiv), 0))
+print(why(eval(baddiv)))

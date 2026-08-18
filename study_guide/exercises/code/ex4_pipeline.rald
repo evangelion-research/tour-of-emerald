@@ -1,0 +1,9 @@
+# Exercise 4.3 — function composition and pipelines.
+def double(n: int) -> int { return n * 2 }
+def add_one(n: int) -> int { return n + 1 }
+
+const double_then_add = double >> add_one
+print(double_then_add(5))
+
+print(5 |> double |> add_one)
+print(5 |> add_one |> double)

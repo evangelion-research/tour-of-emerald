@@ -1,0 +1,8 @@
+# Exercise 1.2 — Celsius to Fahrenheit.
+def to_fahrenheit(c: float) -> float {
+    return c * 9.0 / 5.0 + 32.0
+}
+
+print(to_fahrenheit(0.0))
+print(to_fahrenheit(100.0))
+print(to_fahrenheit(36.6))

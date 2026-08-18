@@ -1,0 +1,10 @@
+# Exercise 5.1 — element-wise arithmetic and reductions.
+dim R, C
+
+const a = tensor([[1.0, 2.0], [3.0, 4.0]])
+const b = tensor([[10.0, 20.0], [30.0, 40.0]])
+
+print(a + b)
+print(item(sum(a, 0)[0]), item(sum(a, 0)[1]))
+print(item(sum(a, 1)[0]), item(sum(a, 1)[1]))
+print(item(sum(sum(a, 0), 0)))

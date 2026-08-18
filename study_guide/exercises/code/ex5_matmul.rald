@@ -1,0 +1,4 @@
+# Exercise 5.2 — matrix multiplication.
+const z = matmul(ones([2, 3]), ones([3, 2]))
+print(z)
+print(item(z[0][0]), item(z[1][1]))
