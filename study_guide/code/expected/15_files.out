@@ -1,0 +1,11 @@
+written ok: True
+first line
+second line
+
+line: first line
+line: second line
+missing ok: False
+cannot read '/tmp/definitely_not_here_12345.txt'
+True False
+program: True
+argument count: 0

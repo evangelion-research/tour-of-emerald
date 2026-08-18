@@ -1,0 +1,5 @@
+0 is falsy
+empty text is falsy
+an empty list is falsy
+non-empty text is truthy
+any non-zero number is truthy
