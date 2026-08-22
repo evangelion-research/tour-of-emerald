@@ -17,36 +17,35 @@ def is_prime(n: int) -> bool {
     return True
 }
 
-# --- the worker -------------------------------------------------------------
+# --- worker and reader -------------------------------------------------------
 #
 # A channel carries values between tasks. `chan(4)` makes a buffered
-# channel with room for 4 items.
+# channel with room for 4 items. `Chan[T]` is the type of a channel that
+# carries T values.
 results: Chan[str] = chan(4)
 
+# The worker computes primes and sends them down the channel.
 def worker(name: str) -> None {
     for n in range(2, 20) {
         if is_prime(n) { send(results, name + " found " + str(n)) }
     }
-    # No more results from this worker.
 }
 
-# `spawn` starts a task. It takes a function of no arguments, so we wrap
-# the worker in a lambda.
-w1 = spawn(() => worker("w1"))
-w2 = spawn(() => worker("w2"))
-
-# Wait for both workers to finish.
-join(w1)
-join(w2)
-
-# Close the channel so the reader knows to stop.
-chan_close(results)
-
-# Drain the results. `recv` returns None once the channel is closed.
-while True {
-    line = recv(results)
-    if line == None { break }
-    print(line)
+# The reader drains results as they arrive, printing each one.
+def reader() -> None {
+    while True {
+        line = recv(results)   # None once the channel is closed
+        if line == None { break }
+        print(line)
+    }
 }
+
+# Run both at once: the reader drains as the worker fills.
+w = spawn(() => worker("w1"))
+r = spawn(reader)
+
+join(w)              # wait for the worker to finish
+chan_close(results)  # signal "no more values"
+join(r)              # wait for the reader to drain the rest
 
 print("done")
