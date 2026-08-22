@@ -10,7 +10,9 @@ program runs, so an entire class of mistakes — calling a function with the wro
 kind of value, reading a field that doesn't exist, forgetting to handle a case —
 is caught early.
 
-Emerald has a small, regular core and a few ideas you won't find in every
+Emerald has a Python-flavored surface with braces instead of indentation,
+TypeScript-style structural typing instead of classes, and a compiler written in
+modern C that emits native binaries. A few ideas you won't find in every
 language:
 
 1. **Values and names.** There are five basic kinds of value: `int`, `float`,
@@ -20,7 +22,8 @@ language:
    (`{ x: 3, y: 4 }`) and combined with *unions* (`Circle | Square`). This is
    how Emerald expresses the "product types" and "sum types" of mathematics.
 3. **Errors are values.** There are no exceptions. A function that can fail
-   returns a `Result`, and you handle the failure explicitly.
+   returns a `Result[T, E]`, and you handle the failure explicitly with `try`
+   and `catch`.
 4. **Functions are values.** You can store them, pass them around, and build new
    ones from old ones.
 5. **Tensors with checked shapes.** For numerical work, a tensor's shape is part
@@ -36,9 +39,9 @@ language:
 > it exists here. One flag is already stable enough to mention: the compiler is
 > invoked as `emeraldc`.
 
-To follow along, you will need the Emerald compiler, `emeraldc`. Once v1 ships,
-installation will be documented on the project website; for now, build it from
-the project's source and make sure `emeraldc` is on your `PATH`.
+To follow along, you will need the Emerald compiler, `emeraldc`. Build it from
+the upstream source at [github.com/evangelion-research/emerald](https://github.com/evangelion-research/emerald)
+and make sure `emeraldc` is on your `PATH`.
 
 Check it works:
 

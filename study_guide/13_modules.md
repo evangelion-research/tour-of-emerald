@@ -5,9 +5,9 @@ Split code into files, and reach for the standard library.
 ## The idea
 
 A **module** is just a file of Emerald code. Its top-level `def`s and `type`s
-can be imported into other files. The **standard library** is a set of ordinary
-modules that ship with the language — text tools, maths, lists, dictionaries,
-sorting, and more.
+can be imported into other files. A leading `_` marks a name private. The
+**standard library** is a set of ordinary modules that ship with the language —
+it is resolved with no flags, after explicit `-I` directories.
 
 ## The code
 
@@ -94,14 +94,29 @@ True 10
 - **`from mod import a, b`** pulls in specific names for unqualified use.
 - **`from mod import x as y`** renames on import.
 - **A leading `_` marks a name private.** `_secret` cannot be imported.
-- **The standard library is just modules.** The ones you'll meet here:
+- **Module paths resolve** first against the importing file's directory, then
+  the project's `src/` root, then each `-I <dir>`, then the standard library.
+  A project can shadow a stdlib module with its own.
+- **The standard library** is 11 ordinary modules — the ones you'll meet here:
   - `strings` — `upper`, `split`, `join`, `strip`, `starts_with`, and (lesson 14)
     `parse_int`.
   - `math` — `max_i`, `abs_i`, `gcd`, `floor`, `round`, `PI`.
   - `lists` — `contains`, `sum`, `first`, `take`, and more.
+  - `sort` — `sorted_ints`, `sorted_strs`, and a general `sorted`.
   - `dict` — `new_map`, `set`, `get_or`, `bump`, `keys`; the type is `Map[V]`
     (keys are strings).
-  - `sort` — `sorted_ints`, `sorted_strs`, and a general `sorted`.
+  - `result` — `Result`, `Option`, `ok`, `err`, `is_ok`, `unwrap_or`, `why`,
+    and the full combinator suite (lesson 14).
+  - `chars` — `is_alpha`, `to_lower`, etc.
+  - `io` — `write`, `read`, `read_lines`, `exists` (lesson 15).
+  - `sys` — `args`, `program`, `arg_count` (lesson 15).
+  - `path` — pure path-component manipulation.
+  - `fmt` — small format-string helpers.
+
+> **Dictionaries and sets** are builtin runtime values constructed with
+> `dict()` and `set()`, not modules. Dictionaries are string-keyed; sets use
+> `|`, `&`, `-`, `^` for union, intersection, difference, and symmetric
+> difference.
 
 ### For the mathematician
 

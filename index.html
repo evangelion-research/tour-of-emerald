@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071411">
+  <meta name="description" content="A guided, hands-on introduction to the Emerald programming language.">
+  <title>A Tour of Emerald</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Tour of Emerald home">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="m20 3 14 9-5 20H11L6 12 20 3Z"/><path d="m6 12 14 6 14-6M20 18v14"/></svg>
+      <span>TOUR OF <b>EMERALD</b></span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="#lessons">Lessons</a>
+      <a href="#lesson/19_reference">Reference</a>
+      <a href="#lesson/exercises/index">Exercises</a>
+      <a class="github-link" href="https://github.com/evangelion-research/emerald">GitHub ↗</a>
+    </nav>
+    <button class="menu-button" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span></button>
+  </header>
+
+  <main id="app">
+    <section id="home-view">
+      <div class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> A hands-on language guide</p>
+          <h1>Programs you can<br><em>reason about.</em></h1>
+          <p class="lede">Meet Emerald: a compiled, statically typed language where types are promises—and the compiler makes sure you keep them.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#lesson/00_getting_started">Begin the tour <span>→</span></a>
+            <a class="button secondary" href="#lessons">Explore lessons</a>
+          </div>
+          <div class="hero-meta"><span><b>18</b> lessons</span><span><b>0</b> surprises at runtime</span></div>
+        </div>
+        <div class="code-window" aria-label="Emerald code example">
+          <div class="window-bar"><span></span><span></span><span></span><small>hello.rald</small></div>
+          <pre><code><i>type</i> Point = { x: <u>int</u>, y: <u>int</u> }
+
+<i>def</i> mag2(p: Point) -&gt; <u>int</u> {
+  <i>return</i> p.x * p.x + p.y * p.y
+}
+
+p = { x: <strong>3</strong>, y: <strong>4</strong> }
+print(mag2(p))</code></pre>
+          <div class="code-result"><span>›</span> 25 <small>✓ type checked</small></div>
+        </div>
+      </div>
+
+      <section class="promise-strip" aria-label="Emerald highlights">
+        <article><span>01</span><h2>Clear by design</h2><p>Python-flavored syntax with explicit, structural types.</p></article>
+        <article><span>02</span><h2>Errors are values</h2><p>Failure appears in the type—never as a hidden exception.</p></article>
+        <article><span>03</span><h2>Built to prove</h2><p>Purity, totality, and tensor shapes checked before runtime.</p></article>
+      </section>
+
+      <section class="lessons-section" id="lessons">
+        <div class="section-heading"><div><p class="eyebrow"><span></span> The curriculum</p><h2>Start small.<br>Build something real.</h2></div><p>Short lessons, runnable programs, and just enough theory. Work straight through or jump to what interests you.</p></div>
+        <div class="lesson-grid" id="lesson-grid"></div>
+      </section>
+
+      <section class="cta">
+        <div><p class="eyebrow"><span></span> Ready when you are</p><h2>Your first Emerald<br>program is one click away.</h2></div>
+        <a class="button light" href="#lesson/00_getting_started">Start with setup <span>→</span></a>
+      </section>
+    </section>
+
+    <section id="reader-view" hidden>
+      <aside class="reader-nav"><a class="back" href="#home">← Tour home</a><p>On this tour</p><div id="reader-links"></div></aside>
+      <article class="reader-content" id="reader-content"><div class="loading">Opening the guide…</div></article>
+    </section>
+  </main>
+
+  <footer><a class="brand" href="#home"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="m20 3 14 9-5 20H11L6 12 20 3Z"/><path d="m6 12 14 6 14-6M20 18v14"/></svg><span>TOUR OF <b>EMERALD</b></span></a><p>Open source. Built for curious minds.</p></footer>
+  <script src="app.js"></script>
+</body>
+</html>

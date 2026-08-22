@@ -1,11 +1,12 @@
-# Exercise 3.3 — parse an int and double it, as a Result.
 import strings
 from result import Result, ok, err, unwrap_or, why
 
-def parse_double(s: str) -> Result[int] {
+error ParseErr { reason: str }
+
+def parse_double(s: str) -> Result[int, ParseErr] {
     const r = strings.parse_int(s)
     if r.ok == True { return ok(r.val * 2) }
-    return err(r.err)
+    return err(ParseErr { reason: why(r) })
 }
 
 print(unwrap_or(parse_double("21"), 0))

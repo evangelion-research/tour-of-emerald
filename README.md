@@ -1,12 +1,12 @@
 # A Tour of Emerald
 
-A guided, hands-on introduction to **Emerald** — a statically-typed programming
-language built around one idea: *know, before your program runs, that it is
-correct.*
+A guided, hands-on introduction to **Emerald** — a compiled, statically-typed
+programming language that treats types as promises the compiler checks before
+your program runs.
 
 This repository holds the complete text of the tour, written as plain Markdown.
-A website will follow when Emerald ships v1. Until then, everything here reads
-fine in any Markdown viewer.
+Read it on the [Tour of Emerald website](https://evangelion-research.github.io/toe/)
+or in any Markdown viewer.
 
 - **Lessons** live in [`study_guide/`](study_guide/) — start at
   [`study_guide/index.md`](study_guide/index.md).
@@ -18,22 +18,44 @@ fine in any Markdown viewer.
 
 ## What is Emerald?
 
-Emerald is a compiled language for people who want the compiler to catch their
-mistakes. A few things that set it apart:
+Emerald is a Python-flavored language with braces instead of indentation,
+TypeScript-style structural typing instead of classes, a two-generation GC, and
+a compiler written in modern C that emits native binaries via your system cc.
+
+```emerald
+type Point = { x: int, y: int }
+type Point3 = Point & { z: int }  # structural "inheritance"
+
+def mag2(p: Point) -> int {
+    return p.x * p.x + p.y * p.y
+}
+
+p: Point3 = { x: 3, y: 4, z: 5 }
+print(mag2(p))          # Point3 is-a Point by shape
+```
+
+A few things that set it apart:
 
 - **Types are promises.** The compiler checks every promise before your program
-  runs — no surprises at runtime.
+  runs — no surprises at runtime. Literal types, unions, generics, and flow
+  narrowing make the checker verify exhaustive case analysis.
 - **Errors are values, not exceptions.** A function that can fail says so in its
-  type and hands back a `Result`; nothing crashes silently.
-- **Records and unions.** Data is modelled with records (like `{ x: int, y: int }`)
-  and unions (like `Circle | Square`), with pattern matching that must cover
-  every case.
-- **Shape-checked tensors.** For people doing numerical or machine-learning
-  work, tensor shapes are part of the type, so a matrix-multiply mismatch is a
-  compile error, not a runtime crash.
+  type and hands back a `Result[T, E]`. `try` propagates failure; `catch`
+  handles it exhaustively. Nothing crashes silently.
+- **Records and unions.** Data is modelled with records (like `{ x: int,
+  y: int }`) and unions (like `Circle | Square`), with pattern matching that
+  must cover every case.
+- **Shape-checked tensors.** For numerical or machine-learning work, tensor
+  shapes are part of the type, so a matrix-multiply mismatch is a compile error,
+  not a runtime crash.
 - **Compiler-checked promises.** Functions can be marked `pure` (no side
-  effects) and can be proven to terminate (`total` vs `partial`). Run
-  `emeraldc --check --proof` and the compiler rejects code that has gaps.
+  effects), are total by default (structural recursion only), and
+  `emeraldc --check --proof` rejects code with gaps in it.
+- **Green threads.** `spawn`, `join`, and `chan` for cooperative concurrency —
+  nothing is interrupted mid-statement, so the language needs no locks.
+- **A standard library of ordinary Emerald.** Eleven modules: `result`, `chars`,
+  `strings`, `builder`, `lists`, `sort`, `math`, `io`, `sys`, `path`, `fmt` —
+  plus builtin `dict()` and `set()` collections.
 
 ## Who is this for?
 
@@ -66,15 +88,29 @@ built around one idea and one runnable program.
 | [11 · Generics](study_guide/11_generics.md) | Functions and types that work for any type |
 | [12 · Functions as values](study_guide/12_functions_as_values.md) | Lambdas, `map`/`filter`/`reduce`, pipelines |
 | [13 · Modules](study_guide/13_modules.md) | Importing code and the standard library |
-| [14 · Errors](study_guide/14_errors.md) | `Result` and `Option` instead of exceptions |
+| [14 · Errors](study_guide/14_errors.md) | `error` declarations, `try`/`catch`, `Result` instead of exceptions |
 | [15 · Files](study_guide/15_files.md) | Reading and writing files, command-line args |
 | [16 · Word count](study_guide/16_word_count.md) | A complete program, end to end |
 | [17 · Tensors](study_guide/17_tensors.md) | Grids of numbers with checked shapes |
 | [18 · Promises](study_guide/18_promises.md) | `pure`, termination, and proof mode |
 | [Reference](study_guide/19_reference.md) | Syntax and standard-library cheat sheet |
 
+## Quick start
+
+```text
+# Requires a C compiler
+$ emeraldc run hello.rald
+Hello, world!
+
+# Check + proof mode
+$ emeraldc --check --proof file.rald
+```
+
+The compiler is invoked as `emeraldc`. Source files use the `.rald` extension.
+
 ## Status
 
-Emerald is pre-1.0. The tour documents the language as it exists in this
-repository; names, the standard library, and the command-line interface may
-still change before the 1.0 release.
+Emerald is pre-1.0. The tour documents the language as it exists in the
+[upstream repository](https://github.com/evangelion-research/emerald); names,
+the standard library, and the command-line interface may still change before
+the 1.0 release.

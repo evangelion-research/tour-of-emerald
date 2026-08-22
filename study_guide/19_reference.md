@@ -6,8 +6,9 @@ somewhere in lessons 1–18; this page collects it in one place.
 ## Running a program
 
 ```text
-emeraldc run file.rald                 # run it
-emeraldc --check --proof file.rald     # also reject `any` and `partial`
+emeraldc run file.rald                   # run it
+emeraldc --check --proof file.rald       # also reject `any` and `partial`
+emeraldc --check --proof --proof-report file.rald  # show what was proved
 ```
 
 ## Comments
@@ -193,24 +194,39 @@ contains([1, 2, 3], 2)          # unqualified
 
 | Module | Functions |
 | --- | --- |
+| `result` | `Result`, `Option`, `ok`, `err`, `is_ok`, `unwrap_or`, `why`, `tag_of`, `map_error`, `catch_all`, `catch_if` |
 | `strings` | `upper`, `split`, `join`, `strip`, `starts_with`, `parse_int`, `pad_right` |
 | `math` | `max_i`, `abs_i`, `gcd`, `floor`, `round`, `PI` |
 | `lists` | `contains`, `sum`, `first`, `take` |
 | `dict` | `new_map`, `set`, `get_or`, `bump`, `keys` — type `Map[V]` (str keys) |
 | `sort` | `sorted_ints`, `sorted_strs`, `sorted(list, cmp)` |
+| `chars` | `is_alpha`, `to_lower` |
 | `io` | `write`, `read`, `read_lines`, `exists` |
 | `sys` | `args`, `program`, `arg_count` |
-| `result` | `Result`, `Option`, `ok`, `err`, `is_ok`, `unwrap_or`, `why` |
-| `chars` | `is_alpha`, `to_lower` |
+
+Also available: `builder` (efficient string construction), `path` (path
+manipulation), `fmt` (format-string helpers). Dictionaries and sets are builtin
+runtime values via `dict()` and `set()`.
 
 ## Errors (no exceptions)
 
 ```emerald
-from result import Result, Option, is_ok, unwrap_or, why, ok, err
+error Fail { reason: str }
 
-def safe_divide(a: int, b: int) -> Result[int] {
-    if b == 0 { return err("division by zero") }
+def safe_divide(a: int, b: int) -> Result[int, Fail] {
+    if b == 0 { return err(Fail { reason: "division by zero" }) }
     return ok(int(a / b))
+}
+
+// `try` unwraps or propagates the failure
+def double_after_divide(a: int, b: int) -> Result[int, Fail] {
+    const n = try safe_divide(a, b)
+    return ok(n * 2)
+}
+
+// `catch` handles every failure case — it is an expression
+const desc = catch safe_divide(10, 2) {
+    Fail e -> "failed: " + e.reason
 }
 
 is_ok(r)           # True / False
@@ -218,8 +234,12 @@ unwrap_or(r, d)    # value, or default d on failure
 why(r)             # the failure reason
 ```
 
-- `Result` is `{ ok: True, val: v }` or `{ ok: False, err: reason }`.
-- `Option` is `{ some: True, val: v }` or `{ some: False }`.
+- `error Name { ... }` declares a failure type — sugar for a record with `_tag`.
+- `Result[T, E]` is `{ ok: True, val: T }` or `{ ok: False, err: E }`.
+- `try e` unwraps a result, or returns the failure to the caller.
+- `catch` is exhaustive — every error must be handled; a missing arm is a
+  compile error.
+- `Option[T]` is `{ some: True, val: T }` or `{ some: False }`.
 
 ## Tensors
 
@@ -245,8 +265,16 @@ def area(w: int, h: int) -> int pure { ... }        # no side effects
 def countdown(n: int) -> int partial { ... }        # opts out of termination proof
 ```
 
-- Total by default: recursion must walk into a structurally smaller input.
+- **Total by default:** recursion must walk into a structurally smaller input.
+  Mutual recursion is rejected without structural descent.
+- **`partial`** marks a function whose termination cannot be proved — an honest
+  "this one is not a proof".
+- **`pure`** promises no print, no rand, no file or process IO, no impure callee.
+  Purity lives on function types, so a pure function cannot smuggle an impure
+  callee through `map`/`filter`.
 - `emeraldc --check --proof` rejects `any` and `partial`.
+- `--proof-report` prints what was checked: totals, vacuous obligations, taint
+  sites, covariance warnings.
 
 ---
 

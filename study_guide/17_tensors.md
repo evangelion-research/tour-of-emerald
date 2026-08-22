@@ -108,6 +108,13 @@ Tensor[f32, [2, 2]]
 - **`reshape`, `transpose`** rearrange a tensor; reshape is itself shape-checked.
 - **`randn(shape, seed)`** needs an explicit seed, so runs are reproducible.
 
+> **`Eq[a, b]`** is Emerald's propositional equality for dimension expressions.
+> A value of type `Eq[a, b]` in scope lets a `Tensor[f32, [a]]` be used as
+> `Tensor[f32, [b]]` across a function boundary — this is how the type system
+> proves that two differently-named dimensions are equal when the code
+> guarantees they must be. It's an advanced feature; the tensor lessons in this
+> tour work with concrete shapes.
+
 ### For the mathematician
 
 A tensor is a multilinear object: a 0-D tensor is a scalar, 1-D a vector, 2-D a
@@ -117,6 +124,8 @@ dimension errors — the `(n×k)·(m×l)` mismatch of matrix multiplication — 
 compile-time errors. `sum(t, axis)` is a contraction; `transpose` swaps the two
 indices of a 2-tensor; `matmul` is the tensor contraction over the inner index.
 Shape-checked tensor types are a lightweight form of the *dependent types* that
-encode "this multiplication is well-formed" statically.
+encode "this multiplication is well-formed" statically. `Eq[a, b]` with `refl`
+is a homogenous equality type over dimension terms — an inhabitant is a proof
+that two dimension expressions denote the same size.
 
 Next: [Promises →](18_promises.md)

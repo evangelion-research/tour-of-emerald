@@ -98,6 +98,10 @@ infinite loops. The ordinary compiler catches the first everywhere; `pure`
 catches the second; totality catches the third. Proof mode is the "pedal to the
 metal" setting: accept nothing with a gap in it.
 
+> **`--proof-report`** (with `--text` or `--json`) prints what was checked —
+> function totals, vacuous obligations, taint sites, and covariance warnings.
+> This is how you verify *what* the proof mode proved, beyond "it compiled".
+
 ### For the mathematician
 
 This is the heart of the language. `pure` is referential transparency — a pure

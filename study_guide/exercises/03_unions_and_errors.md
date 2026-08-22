@@ -95,15 +95,15 @@ print(first_or([], 0))
 
 ## 3.3 — Parse and double
 
-Write `parse_double(s: str) -> Result[int]` that parses `s` as an integer and
-returns its double — or a `Result` failure if `s` isn't a number. Print the
-success of `"21"` and the reason for `"banana"`.
+Write `parse_double(s: str) -> Result[int, ParseErr]` that parses `s` as an
+integer and returns its double — or a failure if `s` isn't a number. Declare an
+`error ParseErr` type first. Print the success of `"21"` and the reason for
+`"banana"`.
 
 <details>
 <summary>Hint</summary>
 
-`strings.parse_int` returns a `Result`. Inspect its `ok` field; on success
-return `ok(r.val * 2)`, on failure return `err(r.err)`.
+`strings.parse_int` returns a `Result`. Use `try` to unwrap it, then `ok(r * 2)`.
 
 </details>
 
@@ -116,10 +116,12 @@ return `ok(r.val * 2)`, on failure return `err(r.err)`.
 import strings
 from result import Result, ok, err, unwrap_or, why
 
-def parse_double(s: str) -> Result[int] {
+error ParseErr { reason: str }
+
+def parse_double(s: str) -> Result[int, ParseErr] {
     const r = strings.parse_int(s)
     if r.ok == True { return ok(r.val * 2) }
-    return err(r.err)
+    return err(ParseErr { reason: why(r) })
 }
 
 print(unwrap_or(parse_double("21"), 0))

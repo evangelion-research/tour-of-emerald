@@ -1,8 +1,7 @@
-True False
-123 0
-invalid digit in 'banana'
-parsed 123
-failed: invalid digit in 'banana'
 5
-division by zero
+failed: division by zero
+4
+0
 {some: True, val: 10} {some: False}
+found: 10
+empty list
