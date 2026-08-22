@@ -85,6 +85,33 @@ function markdown(source){
   closePara();closeList();closeQuote();return out;
 }
 
+// The Markdown keeps an inline copy of each example so it remains pleasant to
+// read on GitHub. On the website, treat the referenced .rald file as the source
+// of truth so edits to study_guide/code are reflected without a second update.
+async function loadStudyGuideCode(source){
+  const reference=/(`(study_guide\/(?:exercises\/)?code\/[^`\n]+\.rald)`[ \t]*(?:\n[ \t]*)+```emerald[^\n]*\n)([\s\S]*?)(\n```)/g;
+  const matches=[...source.matchAll(reference)];
+  if(!matches.length) return source;
+
+  const loaded=await Promise.all(matches.map(async match=>{
+    try{
+      const response=await fetch(match[2]);
+      if(!response.ok) throw new Error(`HTTP ${response.status}`);
+      return (await response.text()).replace(/\r/g,'').replace(/\n$/,'');
+    }catch(error){
+      console.warn(`Could not load ${match[2]}; using the Markdown copy instead.`,error);
+      return match[3];
+    }
+  }));
+
+  let hydrated='', cursor=0;
+  matches.forEach((match,index)=>{
+    hydrated+=source.slice(cursor,match.index)+match[1]+loaded[index]+match[4];
+    cursor=match.index+match[0].length;
+  });
+  return hydrated+source.slice(cursor);
+}
+
 function buildLessonLayout(content,slug){
   const emeraldBlocks=[...content.querySelectorAll('pre[data-language="emerald"]')];
   const article=document.createElement('div'); article.className='lesson-explanation';
@@ -113,7 +140,7 @@ async function route(){
   const slug=hash.slice(8); home.hidden=true;reader.hidden=false;scrollTo(0,0);
   document.querySelectorAll('#reader-links a').forEach(a=>a.classList.toggle('active',a.dataset.slug===slug));
   const content=document.querySelector('#reader-content');content.innerHTML='<div class="loading">Opening the guide…</div>';
-  try{const response=await fetch(`study_guide/${slug}.md`);if(!response.ok)throw Error();content.innerHTML=markdown(await response.text());buildLessonLayout(content,slug);const title=lessons.find(l=>l[0]===slug)?.[1];document.title=`${title || 'Lesson'} · A Tour of Emerald`}catch{content.innerHTML='<h1>Page not found</h1><p>This lesson could not be loaded. Return to the <a href="#home">tour home</a>.</p>'}
+  try{const response=await fetch(`study_guide/${slug}.md`);if(!response.ok)throw Error();const source=await loadStudyGuideCode(await response.text());content.innerHTML=markdown(source);buildLessonLayout(content,slug);const title=lessons.find(l=>l[0]===slug)?.[1];document.title=`${title || 'Lesson'} · A Tour of Emerald`}catch{content.innerHTML='<h1>Page not found</h1><p>This lesson could not be loaded. Return to the <a href="#home">tour home</a>.</p>'}
 }
 window.addEventListener('hashchange',route);route();
 const menu=document.querySelector('.menu-button');menu.addEventListener('click',()=>{const nav=document.querySelector('nav');nav.classList.toggle('open');menu.setAttribute('aria-expanded',nav.classList.contains('open'))});

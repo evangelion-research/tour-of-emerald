@@ -1,0 +1,52 @@
+# Green threads: cooperative tasks that talk over channels.
+#
+# `spawn` starts a task. `chan` connects two tasks. `join` waits for one
+# to finish. Tasks are cooperative: exactly one runs at a time, and
+# control changes hands only at a channel operation, a sleep(), a join(),
+# or an explicit task_yield(). Nothing here needs a lock, because nothing
+# can be interrupted mid-statement.
+
+# --- the work ---------------------------------------------------------------
+def is_prime(n: int) -> bool {
+    if n < 2 { return False }
+    d = 2
+    while d * d <= n {
+        if n % d == 0 { return False }
+        d = d + 1
+    }
+    return True
+}
+
+# --- the worker -------------------------------------------------------------
+#
+# A channel carries values between tasks. `chan(4)` makes a buffered
+# channel with room for 4 items.
+results: Chan[str] = chan(4)
+
+def worker(name: str) -> None {
+    for n in range(2, 20) {
+        if is_prime(n) { send(results, name + " found " + str(n)) }
+    }
+    # No more results from this worker.
+}
+
+# `spawn` starts a task. It takes a function of no arguments, so we wrap
+# the worker in a lambda.
+w1 = spawn(() => worker("w1"))
+w2 = spawn(() => worker("w2"))
+
+# Wait for both workers to finish.
+join(w1)
+join(w2)
+
+# Close the channel so the reader knows to stop.
+chan_close(results)
+
+# Drain the results. `recv` returns None once the channel is closed.
+while True {
+    line = recv(results)
+    if line == None { break }
+    print(line)
+}
+
+print("done")
