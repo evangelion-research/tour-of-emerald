@@ -1,0 +1,125 @@
+/* Tour-specific components layered over the Evangelion Research base theme. */
+.brand img {
+  width: 6.25rem;
+  max-width: none;
+  border: 0;
+  border-radius: .35rem;
+  mix-blend-mode: lighten;
+}
+
+footer .brand img { width: 5rem; }
+
+.brand small {
+  display: block;
+  max-width: 13rem;
+  margin-top: .7rem;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.code-window,
+.lesson-code-panel { box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, .16); }
+
+.lesson-card {
+  position: relative;
+  padding-right: 2.75rem;
+}
+
+.lesson-card b {
+  display: block;
+  position: absolute;
+  top: 1rem;
+  right: 1.15rem;
+  color: var(--subtle);
+  font-weight: 400;
+}
+
+.tok-dimension { color: #d6ccff; font-weight: 600; }
+.tok-escape { color: #86b6b0; }
+.reader-menu { display: none; }
+
+#reader-links-mobile {
+  display: grid;
+  margin-top: .75rem;
+}
+
+#reader-links-mobile a {
+  padding: .42rem .25rem;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+#reader-links-mobile a.active { color: var(--heading); font-weight: 650; }
+
+@media (min-width: 78em) {
+  #home-view { max-width: 66rem; }
+
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(22rem, .85fr);
+    align-items: center;
+    gap: 4rem;
+  }
+
+  .code-window { margin: 0; }
+  .lesson-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #reader-view { max-width: 82rem; grid-template-columns: 11rem minmax(0, 1fr); }
+
+  .lesson-shell:not(.solo) {
+    display: grid;
+    grid-template-columns: minmax(24rem, 38rem) minmax(22rem, 32rem);
+    align-items: start;
+    gap: 3rem;
+    max-width: none;
+  }
+
+  .lesson-code-panel {
+    position: sticky;
+    top: 2rem;
+    max-height: calc(100vh - 4rem);
+    margin: 0;
+    overflow: auto;
+  }
+}
+
+@media (max-width: 47.99em) {
+  .site-header { position: relative; padding-right: 4.25rem; }
+  .site-header nav { display: none; width: 100%; padding-top: .5rem; }
+  .site-header nav.open { display: grid; }
+
+  .menu-button {
+    display: grid;
+    position: absolute;
+    top: 2rem;
+    right: 1.4rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: .65rem;
+    border: 1px solid var(--border);
+    border-radius: .4rem;
+    background: var(--surface);
+    place-content: center;
+    gap: .35rem;
+  }
+
+  .menu-button span { display: block; width: 1rem; height: 1px; background: var(--text); }
+  #reader-view { padding-top: 1.5rem; }
+
+  .reader-menu {
+    display: block;
+    margin-bottom: 1.75rem;
+    padding: .75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .reader-menu summary {
+    color: var(--heading);
+    font-size: .82rem;
+    font-weight: 650;
+    cursor: pointer;
+  }
+}

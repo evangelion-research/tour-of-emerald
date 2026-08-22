@@ -7,19 +7,22 @@
   <meta name="description" content="A guided, hands-on introduction to the Emerald programming language.">
   <title>A Tour of Emerald</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="tour.css">
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
   <header class="site-header">
     <a class="brand" href="#home" aria-label="Tour of Emerald home">
       <img src="assets/emerald.gif" alt="Emerald terminal animation" width="960" height="540">
-      <span>TOUR OF <b>EMERALD</b></span>
+      <span>A Tour of Emerald</span>
+      <small>Learn the language, one idea at a time.</small>
     </a>
     <nav aria-label="Primary navigation">
       <a href="#lessons">Lessons</a>
-      <a href="#lesson/19_reference">Reference</a>
+      <a href="#lesson/20_reference">Reference</a>
       <a href="#lesson/exercises/index">Exercises</a>
-      <a class="github-link" href="https://github.com/evangelion-research/emerald">GitHub ↗</a>
+      <a href="https://evangelion-research.github.io/">Research home</a>
+      <a class="github-link" href="https://github.com/evangelion-research/emerald">GitHub <span aria-hidden="true">↗</span></a>
     </nav>
     <button class="menu-button" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span></button>
   </header>
@@ -35,17 +38,17 @@
             <a class="button primary" href="#lesson/00_getting_started">Begin the tour <span>→</span></a>
             <a class="button secondary" href="#lessons">Explore lessons</a>
           </div>
-          <div class="hero-meta"><span><b>18</b> lessons</span><span><b>0</b> surprises at runtime</span></div>
+          <div class="hero-meta"><span><b>20</b> lessons</span><span><b>0</b> surprises at runtime</span></div>
         </div>
         <div class="code-window" aria-label="Emerald code example">
           <div class="window-bar"><span></span><span></span><span></span><small>hello.rald</small></div>
-          <pre><code><i>type</i> Point = { x: <u>int</u>, y: <u>int</u> }
+          <pre data-language="emerald"><code>type Point = { x: int, y: int }
 
-<i>def</i> mag2(p: Point) -&gt; <u>int</u> {
-  <i>return</i> p.x * p.x + p.y * p.y
+def mag2(p: Point) -&gt; int {
+  return p.x * p.x + p.y * p.y
 }
 
-p = { x: <strong>3</strong>, y: <strong>4</strong> }
+p = { x: 3, y: 4 }
 print(mag2(p))</code></pre>
           <div class="code-result"><span>›</span> 25 <small>✓ type checked</small></div>
         </div>
@@ -70,11 +73,12 @@ print(mag2(p))</code></pre>
 
     <section id="reader-view" hidden>
       <aside class="reader-nav"><a class="back" href="#home">← Tour home</a><p>On this tour</p><div id="reader-links"></div></aside>
+      <details class="reader-menu"><summary>Browse the tour</summary><div id="reader-links-mobile"></div></details>
       <article class="reader-content" id="reader-content"><div class="loading">Opening the guide…</div></article>
     </section>
   </main>
 
-  <footer><a class="brand" href="#home"><img src="assets/emerald.gif" alt="Emerald terminal animation" width="960" height="540"><span>TOUR OF <b>EMERALD</b></span></a><p>Open source. Built for curious minds.</p></footer>
+  <footer><a class="brand" href="#home"><img src="assets/emerald.gif" alt="Emerald terminal animation" width="960" height="540"><span>A Tour of Emerald</span></a><p>Part of <a href="https://evangelion-research.github.io/">Evangelion Research</a>. Open source, built for curious minds.</p></footer>
   <script src="app.js"></script>
 </body>
 </html>

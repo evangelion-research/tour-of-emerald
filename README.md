@@ -5,7 +5,7 @@ programming language that treats types as promises the compiler checks before
 your program runs.
 
 This repository holds the complete text of the tour, written as plain Markdown.
-Read it on the [Tour of Emerald website](https://evangelion-research.github.io/toe/)
+Read it on the [Tour of Emerald website](https://evangelion-research.github.io/tour-of-emerald/)
 or in any Markdown viewer.
 
 - **Lessons** live in [`study_guide/`](study_guide/) — start at
@@ -93,7 +93,8 @@ built around one idea and one runnable program.
 | [16 · Word count](study_guide/16_word_count.md) | A complete program, end to end |
 | [17 · Tensors](study_guide/17_tensors.md) | Grids of numbers with checked shapes |
 | [18 · Promises](study_guide/18_promises.md) | `pure`, termination, and proof mode |
-| [Reference](study_guide/19_reference.md) | Syntax and standard-library cheat sheet |
+| [19 · Concurrency](study_guide/19_concurrency.md) | Green threads, tasks, and channels |
+| [Reference](study_guide/20_reference.md) | Syntax and standard-library cheat sheet |
 
 ## Quick start
 
