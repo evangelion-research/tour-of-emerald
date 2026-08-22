@@ -1,5 +1,7 @@
 # Emerald has no exceptions. A function that can fail says so in its type.
 # `error` declares a kind of failure — it is sugar for a record with a tag.
+from result import Result, ok, err, unwrap_or
+
 error Fail { reason: str }
 
 # `Result[T, E]` means "produces a T, or fails with an E".
