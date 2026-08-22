@@ -1,35 +1,30 @@
-# Exercise 6.2 — a tiny expression evaluator with safe division.
 from result import Result, ok, err, unwrap_or, why
+
+error DivByZero
 
 type Expr = { tag: "num", val: int }
           | { tag: "add", left: Expr, right: Expr }
           | { tag: "mul", left: Expr, right: Expr }
           | { tag: "div", left: Expr, right: Expr }
 
-def eval(e: Expr) -> Result[int] {
+def eval(e: Expr) -> Result[int, DivByZero] {
     match e {
         { tag: "num", val: val } -> { return ok(val) }
         { tag: "add", left: left, right: right } -> {
-            const a = eval(left)
-            if a.ok == False { return a }
-            const b = eval(right)
-            if b.ok == False { return b }
-            return ok(a.val + b.val)
+            const a = try eval(left)
+            const b = try eval(right)
+            return ok(a + b)
         }
         { tag: "mul", left: left, right: right } -> {
-            const a = eval(left)
-            if a.ok == False { return a }
-            const b = eval(right)
-            if b.ok == False { return b }
-            return ok(a.val * b.val)
+            const a = try eval(left)
+            const b = try eval(right)
+            return ok(a * b)
         }
         { tag: "div", left: left, right: right } -> {
-            const a = eval(left)
-            if a.ok == False { return a }
-            const b = eval(right)
-            if b.ok == False { return b }
-            if b.val == 0 { return err("division by zero") }
-            return ok(int(a.val / b.val))
+            const a = try eval(left)
+            const b = try eval(right)
+            if b == 0 { return err(DivByZero {}) }
+            return ok(int(a / b))
         }
     }
 }

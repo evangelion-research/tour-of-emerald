@@ -65,8 +65,9 @@ n 2
 Model an arithmetic expression as a union, then evaluate it safely.
 
 - `Expr` is a `num` (an int), an `add`, a `mul`, or a `div` of two `Expr`s.
-- `eval(e: Expr) -> Result[int]` returns the value, or a failure on division by
-  zero.
+- Declare an `error DivByZero` failure.
+- `eval(e: Expr) -> Result[int, DivByZero]` returns the value, or a failure on
+  division by zero.
 
 Evaluate `5 + 2 * 3`, `10 / 2`, and `10 / 0`, printing each result (or its
 failure reason).
@@ -74,9 +75,8 @@ failure reason).
 <details>
 <summary>Hint</summary>
 
-Use `match` on `e` with one arm per case. In the `add`/`mul`/`div` arms, evaluate
-the two children first and check their `ok` fields before combining. `div` must
-also check for a zero divisor.
+Use `match` on `e` with one arm per case. In the `add`/`mul`/`div` arms, use
+`try` to unwrap the two children. `div` must also check for a zero divisor.
 
 </details>
 
@@ -88,35 +88,31 @@ also check for a zero divisor.
 ```emerald
 from result import Result, ok, err, unwrap_or, why
 
+error DivByZero
+
 type Expr = { tag: "num", val: int }
           | { tag: "add", left: Expr, right: Expr }
           | { tag: "mul", left: Expr, right: Expr }
           | { tag: "div", left: Expr, right: Expr }
 
-def eval(e: Expr) -> Result[int] {
+def eval(e: Expr) -> Result[int, DivByZero] {
     match e {
         { tag: "num", val: val } -> { return ok(val) }
         { tag: "add", left: left, right: right } -> {
-            const a = eval(left)
-            if a.ok == False { return a }
-            const b = eval(right)
-            if b.ok == False { return b }
-            return ok(a.val + b.val)
+            const a = try eval(left)
+            const b = try eval(right)
+            return ok(a + b)
         }
         { tag: "mul", left: left, right: right } -> {
-            const a = eval(left)
-            if a.ok == False { return a }
-            const b = eval(right)
-            if b.ok == False { return b }
-            return ok(a.val * b.val)
+            const a = try eval(left)
+            const b = try eval(right)
+            return ok(a * b)
         }
         { tag: "div", left: left, right: right } -> {
-            const a = eval(left)
-            if a.ok == False { return a }
-            const b = eval(right)
-            if b.ok == False { return b }
-            if b.val == 0 { return err("division by zero") }
-            return ok(int(a.val / b.val))
+            const a = try eval(left)
+            const b = try eval(right)
+            if b == 0 { return err(DivByZero {}) }
+            return ok(int(a / b))
         }
     }
 }
@@ -140,12 +136,16 @@ print(why(eval(baddiv)))
 division by zero
 ```
 
+> Using `try` inside `match` arms propagates failures cleanly: if either child
+> fails, the failure returns immediately — no nesting of `if ok` checks. This
+> is the same mechanism from lesson 14.
+
 </details>
 
 ### For the mathematician
 
 This is an **algebraic data type** — a tree whose nodes are sums and products —
 together with its **evaluation** function. `match` is structural induction on
-the tree; the `Result` return type threads a possible failure (the "exception")
-explicitly through the recursion. This is the same shape as defining a tiny
-programming language and its denotational semantics.
+the tree; `try` threads a possible failure (the "exception") monadically
+through the recursion. This is the same shape as defining a tiny programming
+language and its denotational semantics.
